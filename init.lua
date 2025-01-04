@@ -225,6 +225,16 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  -- my plugins
+  {
+    'nvim-ts-autotag',
+    opts = {
+      enable_close = true,
+      enable_rename = true,
+      enable_close_on_slash = false
+    },
+  },
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
