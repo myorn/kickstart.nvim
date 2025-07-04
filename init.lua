@@ -252,7 +252,7 @@ require('lazy').setup({
     opts = {
       enable_close = true,
       enable_rename = true,
-      enable_close_on_slash = false
+      enable_close_on_slash = false,
     },
   },
 
@@ -1022,22 +1022,54 @@ require('lazy').setup({
   },
 })
 
-require('nvim-ts-autotag').setup({
+require('nvim-ts-autotag').setup {
   opts = {
     -- Defaults
     enable_close = true, -- Auto close tags
     enable_rename = true, -- Auto rename pairs of tags
-    enable_close_on_slash = false -- Auto close on trailing </
+    enable_close_on_slash = false, -- Auto close on trailing </
   },
   -- Also override individual filetype configs, these take priority.
   -- Empty by default, useful if one of the "opts" global settings
   -- doesn't work well in a specific filetype
   per_filetype = {
-    ["html"] = {
-      enable_close = false
-    }
-  }
-})
+    ['html'] = {
+      enable_close = false,
+    },
+  },
+}
+
+-- My visual selection keybind
+
+function vim.getVisualSelection()
+  local current_clipboard_content = vim.fn.getreg '"'
+
+  vim.cmd 'noau normal! "vy"'
+  local text = vim.fn.getreg 'v'
+  vim.fn.setreg('v', {})
+
+  vim.fn.setreg('"', current_clipboard_content)
+
+  text = string.gsub(text, '\n', '')
+  if #text > 0 then
+    return text
+  else
+    return ''
+  end
+end
+
+local keymap = vim.keymap.set
+local bt = require 'telescope.builtin'
+local opts = { noremap = true, silent = true }
+
+keymap('v', '<space><space>', function()
+  local text = vim.getVisualSelection()
+  bt.current_buffer_fuzzy_find { default_text = text }
+end, opts)
+keymap('v', '<space>s', function()
+  local text = vim.getVisualSelection()
+  bt.grep_string { search = text }
+end, opts)
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
