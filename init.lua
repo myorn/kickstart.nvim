@@ -257,7 +257,10 @@ require('lazy').setup({
   },
 
   {
-    'tpope/vim-obsession',
+    'dhruvasagar/vim-prosession',
+    dependencies = {
+      'tpope/vim-obsession',
+    },
   },
 
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
@@ -421,11 +424,18 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          -- mappings = {
+          --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          -- },
+          layout_strategy = 'vertical',
+          layout_config = {
+            width = 0.95,
+            height = 0.95,
+            anchor = 'top',
+            anchor_padding = 20,
+          },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -473,6 +483,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- my
+      require('telescope').load_extension 'prosession'
     end,
   },
 
@@ -1058,8 +1071,6 @@ keymap('v', '<space>s', function()
   local text = vim.getVisualSelection()
   bt.grep_string { search = text }
 end, opts)
-
-vim.cmd ':Obsession'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
