@@ -255,11 +255,42 @@ require('lazy').setup({
       enable_close_on_slash = false,
     },
   },
-
   {
-    'dhruvasagar/vim-prosession',
+    'mbbill/undotree',
+    cmd = 'UndotreeToggle', -- Lazy load on command
+    keys = {
+      { '<leader>u', '<cmd>UndotreeToggle<CR>', desc = 'Toggle Undotree' },
+    },
+    config = function()
+      -- Optional: some common user preferences
+      vim.g.undotree_WindowLayout = 2 -- Split layout: 2 = horizontal, 3 = vertical
+      vim.g.undotree_SplitWidth = 40 -- Width of the undotree window
+      vim.g.undotree_SetFocusWhenToggle = 1 -- Focus the undotree when toggled
+    end,
+  },
+  {
+    'jedrzejboczar/possession.nvim',
     dependencies = {
-      'tpope/vim-obsession',
+      'nvim-lua/plenary.nvim',
+    },
+    opts = {
+      -- Sessions are saved to this directory
+      session_dir = vim.fn.stdpath 'state' .. '/sessions/',
+      -- Optional: auto-sessions
+      autosave = {
+        current = true, -- autosave current session on exit
+        cwd = true, -- autosave unnamed session
+        on_load = true,
+        on_quit = true,
+      },
+      autoload = 'last_cwd', -- load last session automatically
+    },
+    cmd = { 'PossessionSave', 'PossessionLoad', 'PossessionDelete', 'PossessionList' },
+    keys = {
+      { '<leader>sl', '<cmd>PossessionLoad<CR>', desc = 'Load Session' },
+      { '<leader>ss', '<cmd>PossessionSave<CR>', desc = 'Save Session' },
+      { '<leader>sd', '<cmd>PossessionDelete<CR>', desc = 'Delete Session' },
+      { '<leader>sf', '<cmd>Telescope possession list<CR>', desc = 'Find Session' },
     },
   },
 
@@ -485,7 +516,7 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
 
       -- my
-      require('telescope').load_extension 'prosession'
+      require('telescope').load_extension 'possession'
     end,
   },
 
