@@ -268,6 +268,7 @@ require('lazy').setup({
       vim.g.undotree_SetFocusWhenToggle = 1 -- Focus the undotree when toggled
     end,
   },
+
   {
     'jedrzejboczar/possession.nvim',
     dependencies = {
@@ -279,18 +280,23 @@ require('lazy').setup({
       -- Optional: auto-sessions
       autosave = {
         current = true, -- autosave current session on exit
-        cwd = true, -- autosave unnamed session
+        cwd = true,
         on_load = true,
         on_quit = true,
       },
       autoload = 'last_cwd', -- load last session automatically
+      prompt_no_cr = true,
+      plugins = {
+        delete_hidden_buffers = false, -- Remove the deletion of hidden buffers without windows
+        delete_buffers = true, -- Delete all buffers before loading another session
+      },
     },
     cmd = { 'PossessionSave', 'PossessionLoad', 'PossessionDelete', 'PossessionList' },
     keys = {
-      { '<leader>sl', '<cmd>PossessionLoad<CR>', desc = 'Load Session' },
-      { '<leader>ss', '<cmd>PossessionSave<CR>', desc = 'Save Session' },
-      { '<leader>sd', '<cmd>PossessionDelete<CR>', desc = 'Delete Session' },
-      { '<leader>sf', '<cmd>Telescope possession list<CR>', desc = 'Find Session' },
+      { '<leader>pl', '<cmd>PossessionLoad<CR>', desc = 'Load Session' },
+      { '<leader>ps', '<cmd>PossessionSave<CR>', desc = 'Save Session' },
+      { '<leader>pd', '<cmd>PossessionDelete<CR>', desc = 'Delete Session' },
+      { '<leader>pf', '<cmd>Telescope possession list<CR>', desc = 'Find Session' },
     },
   },
 
