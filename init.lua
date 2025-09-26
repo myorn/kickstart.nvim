@@ -300,8 +300,39 @@ require('lazy').setup({
     },
   },
 
+  {
+    'nvimdev/indentmini.nvim',
+    config = function()
+      require('indentmini').setup()
+    end,
+  },
+
+  {
+    'yuukiflow/Arduino-Nvim',
+    config = function()
+      -- Load LSP configuration first
+      -- require('Arduino-Nvim').setup()
+
+      -- Set up Arduino file type detection
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'arduino',
+        callback = function()
+          require 'Arduino-Nvim'
+        end,
+      })
+    end,
+  },
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  -- 'NMAC427/guess-indent.nvim',
+  --
+  { -- Detect tabstop and shiftwidth automatically
+    'nmac427/guess-indent.nvim',
+    config = function()
+      require('guess-indent').setup {}
+    end,
+    lazy = false, -- or event = "BufReadPre" (make sure it gets loaded)
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -493,7 +524,13 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sg', function()
+        builtin.live_grep {
+          additional_args = function()
+            return { '-j1' }
+          end,
+        }
+      end, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
@@ -736,9 +773,46 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
+        clangd = {
+          cmd = { 'clangd', '--background-index', '--clang-tidy' },
+        },
+
+        gopls = {
+          settings = {
+            gopls = {
+              staticcheck = true,
+            },
+          },
+        },
+
+        -- pyright = {
+        --   settings = {
+        --     python = {
+        --       analysis = {
+        --         autoImportCompletions = true,
+        --         diagnosticMode = 'workspace',
+        --         typeCheckingMode = 'basic',
+        --         diagnosticSeverityOverrides = {
+        --           reportUnusedImport = 'none',
+        --           reportUnusedVariable = 'none',
+        --         },
+        --       },
+        --     },
+        --   },
+        -- },
+        basedpyright = {
+          disableOrganizeImports = true,
+          analysis = {
+            autoImportCompletions = true,
+            diagnosticMode = 'workspace',
+            typeCheckingMode = 'off',
+            diagnosticSeverityOverrides = {
+              reportGeneralTypeIssues = false,
+              reportUnusedImport = false,
+              reportUnusedVariable = false,
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -746,7 +820,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -834,10 +908,10 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'ruff' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -1028,6 +1102,26 @@ require('lazy').setup({
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  },
+
+  {
+    'zhisme/copy_with_context.nvim',
+    config = function()
+      require('copy_with_context').setup {
+        -- Customize mappings
+        mappings = {
+          relative = '<leader>cy',
+          absolute = '<leader>cY',
+          remote = '<leader>cr',
+        },
+        formats = {
+          default = '# {filepath}:{line}', -- Used by relative and absolute mappings
+          remote = '# {remote_url}',
+        },
+        -- whether to trim lines or not
+        trim_lines = false,
+      }
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
