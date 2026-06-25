@@ -5,6 +5,21 @@ return {
     ft = { 'html', 'jsx', 'tsx', 'vue', 'svelte', 'xml' },
   },
   {
+    'nvimdev/lspsaga.nvim',
+    cmd = 'Lspsaga',
+    keys = {
+      { '<leader>si', '<cmd>Lspsaga incoming_calls<CR>', desc = 'Toggle Incoming Call Tree' },
+      { '<leader>so', '<cmd>Lspsaga incoming_calls<CR>', desc = 'Toggle Outgoing Call Tree' },
+    },
+    config = function()
+      require('lspsaga').setup {}
+    end,
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter', -- optional
+      'nvim-tree/nvim-web-devicons', -- optional
+    },
+  },
+  {
     'mbbill/undotree',
     cmd = 'UndotreeToggle',
     keys = {

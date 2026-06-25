@@ -623,7 +623,11 @@ return {
         python = { 'isort', 'ruff' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettier' },
+        javascript = { 'prettier', stop_after_first = true },
+        typescript = { 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettier', stop_after_first = true },
+        html = { 'prettier', stop_after_first = true },
       },
     },
   },
@@ -802,7 +806,7 @@ return {
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = false },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:

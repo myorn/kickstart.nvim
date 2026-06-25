@@ -24,6 +24,9 @@ vim.defer_fn(function() vim.o.clipboard = 'unnamedplus' end, 0)
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Enable C-style indent (handles JS/TS braces correctly)
+vim.o.cindent = true
+
 -- Save undo history
 vim.o.undofile = true
 
